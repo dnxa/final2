@@ -61,7 +61,8 @@ def create_kid_view(request):
 
         # Validate the form we just created
         if kid_form.is_valid():
-            return HttpResponse("Created.", status=200)
+            kid_form.save()
+            return redirect("/santa_list/kids/")
 
     return HttpResponse("Bad Request.", status=400)
 
@@ -113,7 +114,11 @@ def get_kids_view(request):
     return HttpResponse("Bad Request.", status=400)
 def get_kid_by_id_view(request, kid_id):
     if request.method == "GET":
-        kid = Kid.objects.get(id=kid_id)
+        # Make sure kid with that id exists
+        try:
+            kid = Kid.objects.get(id=kid_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("No kid with that id in the list.", status=400)
 
         # Pass our list to list template
         return HttpResponse(f"{kid.first_name} {kid.last_name}", status=200)
