@@ -17,9 +17,17 @@ def get_list_view(request):
         '''
         santas_list = SantasList.objects.last()
 
-        # Single line loop through all nice and naughty kids and fil the lists
-        naughty_list = [f"{kid.first_name} {kid.last_name}" for kid in santas_list.naughty_list.all()]
-        nice_list =    [f"{kid.first_name} {kid.last_name}" for kid in santas_list.nice_list.all()]
+        # loop through all nice and naughty kids and fil the lists
+        naughty_list = []
+        nice_list = []
+
+        for kid in santas_list.nice_list.all():
+            nice_list.append(f"{kid.first_name} {kid.last_name} Niceness:{kid.niceness_coefficient}, Toy:{kid.toys.first()}")
+
+        for kid in santas_list.naughty_list.all():
+            naughty_list.append(f"{kid.first_name} {kid.last_name} Niceness:{kid.niceness_coefficient}, coal:{kid.coals.first()}")
+
+        # authors = Author.objects.prefetch_related('book_set').all()
 
         # Pass our list to list template
         return render(request,  "list.html", context={'naughty_list':naughty_list, 'nice_list':nice_list})
@@ -55,14 +63,14 @@ def create_kid_view(request):
     if request.method == "GET":
         kid_form = KidForm()
 
-        return render(request, "listform.html", context={'form': kid_form})
+        return render(request, "kidcreateform.html", context={'form': kid_form})
     elif request.method == "POST":
         kid_form = KidForm(request.POST)
 
         # Validate the form we just created
         if kid_form.is_valid():
             kid_form.save()
-            return redirect("/santa_list/kids/")
+            return redirect("/santa_list/kids")
 
     return HttpResponse("Bad Request.", status=400)
 

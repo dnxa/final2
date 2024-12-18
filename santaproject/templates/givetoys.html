@@ -6,12 +6,11 @@
 </head>
 <body>
 
-<p>All Toys</p>
-<ul>
-{% for i in toys %}
-    <li>{{ i }}</li>
-{% endfor %}
-</ul>
+<p>Give toys to all kids in list?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Give</button>
+</form>
 
 </body>
 </html>

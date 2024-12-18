@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
             name='SantasList',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('naughty_list', models.ManyToManyField(related_name='naughty_lists', to='Santa_list.kid')),
-                ('nice_list', models.ManyToManyField(related_name='nice_list', to='Santa_list.kid')),
+                ('naughty_list', models.ManyToManyField(related_name='naughty_lists', to='santalist.kid')),
+                ('nice_list', models.ManyToManyField(related_name='nice_list', to='santalist.kid')),
             ],
         ),
     ]

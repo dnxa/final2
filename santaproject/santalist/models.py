@@ -8,6 +8,7 @@ class Kid(models.Model):
     niceness_coefficient = models.DecimalField(max_digits=3, decimal_places=2)
     gift = models.CharField(max_length=150)
 
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
