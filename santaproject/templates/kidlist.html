@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+
+<p>All Kids</p>
+<ul>
+{% for i in kids %}
+    <li>{{ i }}</li>
+{% endfor %}
+</ul>
+
 </body>
 </html>
