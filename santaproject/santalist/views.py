@@ -4,10 +4,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import Kid, SantasList
 from .forms import KidForm, KidDeleteForm
 
-# Create your views here.
-
 PASSING_NICENESS_COEFFICIENT = 0.5
 
+# /santa_list/
 def get_list_view(request):
     if request.method == "GET":
         '''
@@ -21,20 +20,20 @@ def get_list_view(request):
         naughty_list = []
         nice_list = []
 
+        # Append to the lists we will display
         for kid in santas_list.nice_list.all():
             nice_list.append(f"{kid.first_name} {kid.last_name} Niceness:{kid.niceness_coefficient}, Toy:{kid.toys.first()}")
 
         for kid in santas_list.naughty_list.all():
             naughty_list.append(f"{kid.first_name} {kid.last_name} Niceness:{kid.niceness_coefficient}, coal:{kid.coals.first()}")
 
-        # authors = Author.objects.prefetch_related('book_set').all()
 
         # Pass our list to list template
         return render(request,  "list.html", context={'naughty_list':naughty_list, 'nice_list':nice_list})
 
     return HttpResponse("Bad Request.", status=400)
 
-
+# /santa_list/create
 def create_list_view(request):
     if request.method == "GET":
         return render(request, "listform.html")
@@ -58,7 +57,7 @@ def create_list_view(request):
 
     return HttpResponse("Bad Request.", status=400)
 
-
+# /santa_list/create_kid
 def create_kid_view(request):
     if request.method == "GET":
         kid_form = KidForm()
@@ -74,6 +73,7 @@ def create_kid_view(request):
 
     return HttpResponse("Bad Request.", status=400)
 
+# /santa_list/delete_kid
 def delete_kid_from_list_view(request):
     if request.method == "GET":
         kid_delete_form = KidDeleteForm()
@@ -110,6 +110,7 @@ def delete_kid_from_list_view(request):
 
     return HttpResponse("Bad Request.", status=400)
 
+# /santa_list/kids
 def get_kids_view(request):
     if request.method == "GET":
         kids = Kid.objects.all()
@@ -120,6 +121,8 @@ def get_kids_view(request):
         return render(request, "kidlist.html", context={'kids': kid_name_list})
 
     return HttpResponse("Bad Request.", status=400)
+
+# /santa_list/kids/(kid_id)
 def get_kid_by_id_view(request, kid_id):
     if request.method == "GET":
         # Make sure kid with that id exists

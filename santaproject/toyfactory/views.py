@@ -5,7 +5,7 @@ from .models import Toy, Coal
 from .forms import ToyForm
 from santalist.models import Kid, SantasList
 
-
+# /toy_factory/
 def toy_list_view(request):
     if request.method == "GET":
         toys = Toy.objects.all()
@@ -17,7 +17,7 @@ def toy_list_view(request):
 
     return HttpResponse("Bad Request.", status=400)
 
-
+# /toy_factory/(toy_id)
 def get_toy_by_id_view(request, toy_id):
     if request.method == "GET":
         # Make sure we toy with that id
@@ -30,6 +30,7 @@ def get_toy_by_id_view(request, toy_id):
 
     return HttpResponse("Bad Request.", status=400)
 
+# /toy_factory/create
 def toy_create_view(request):
     if request.method == "GET":
         toy_form = ToyForm()
@@ -47,6 +48,7 @@ def toy_create_view(request):
 
     return HttpResponse("Bad Request.", status=400)
 
+# /toy_factory/give_toys
 def give_toy_view(request):
     if request.method == "GET":
         # Render the give toys button

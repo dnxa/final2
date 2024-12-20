@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'santalist',
     'toyfactory',
     'Statistics',
+    'profileapp',
 ]
 
 MIDDLEWARE = [

@@ -18,7 +18,7 @@ class Toy(models.Model):
 
     owner = models.ForeignKey(Kid, on_delete=models.CASCADE, null=True, blank=True, related_name='toys')
 
-    # In hours
+    # In minutes
     time_to_make = models.IntegerField()
 
     def __str__(self):
