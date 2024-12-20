@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Kid, SantasList
 from .forms import KidForm, KidDeleteForm
 
+
 PASSING_NICENESS_COEFFICIENT = 0.5
 
 # /santa_list/
+@permission_required("is_santa", login_url='/login/')
 def get_list_view(request):
     if request.method == "GET":
         '''
@@ -34,6 +37,7 @@ def get_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/create
+@permission_required("is_santa", login_url='/login/')
 def create_list_view(request):
     if request.method == "GET":
         return render(request, "listform.html")
@@ -58,6 +62,7 @@ def create_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/create_kid
+@permission_required("is_santa", login_url='/login/')
 def create_kid_view(request):
     if request.method == "GET":
         kid_form = KidForm()
@@ -74,6 +79,7 @@ def create_kid_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/delete_kid
+@permission_required("is_santa", login_url='/login/')
 def delete_kid_from_list_view(request):
     if request.method == "GET":
         kid_delete_form = KidDeleteForm()
@@ -111,6 +117,7 @@ def delete_kid_from_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/kids
+@permission_required("is_santa", login_url='/login/')
 def get_kids_view(request):
     if request.method == "GET":
         kids = Kid.objects.all()
@@ -123,6 +130,7 @@ def get_kids_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/kids/(kid_id)
+@permission_required("is_santa", login_url='/login/')
 def get_kid_by_id_view(request, kid_id):
     if request.method == "GET":
         # Make sure kid with that id exists
