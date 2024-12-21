@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required
 
 from santalist.models import Kid, SantasList
 from toyfactory.models import Toy
@@ -8,7 +8,7 @@ from toyfactory.models import Toy
 TIME_TO_BRING_ONE_TOY = 150
 
 # /statistics/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def list_statistics_view(request):
     if request.method == "GET":
         # Get the latest list we created
@@ -25,7 +25,7 @@ def list_statistics_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /statistics/toys/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def toy_statistics_view(request):
     if request.method == "GET":
         kids_owners = Kid.objects.all()
@@ -51,12 +51,12 @@ def toy_statistics_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /statistics/time_to_make/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def time_to_make_view(request):
     if request.method == "GET":
         toys = Toy.objects.all()
 
-        # In this list we store tuple of toy name and time to make
+        # In this list we store tuples of toy name and time to make
         toys_list = []
 
         total_time = 0
@@ -78,7 +78,7 @@ def time_to_make_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /statistics/time_to_bring/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def time_to_bring_view(request):
     if request.method == "GET":
         toys = Toy.objects.all()

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Kid, SantasList
 from .forms import KidForm, KidDeleteForm
@@ -9,13 +9,13 @@ from .forms import KidForm, KidDeleteForm
 PASSING_NICENESS_COEFFICIENT = 0.5
 
 # /santa_list/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def get_list_view(request):
     if request.method == "GET":
         '''
         I get the first list here. technically you could have more than one so
-        it Might make sense to loop through all of them using all()
-        but we probably wont have more than one santa list so I'll live it like this. 
+        it Might make more sense to loop through all of them using all()
+        but we probably wont have more than one santa list at a time so I'll live it like this. 
         '''
         santas_list = SantasList.objects.last()
 
@@ -37,7 +37,7 @@ def get_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/create
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def create_list_view(request):
     if request.method == "GET":
         return render(request, "listform.html")
@@ -45,6 +45,7 @@ def create_list_view(request):
         # Get the current kids to designate them to right lists.
         kids = Kid.objects.all()
 
+        # Create a new santa list
         new_santas_list = SantasList.objects.create()
 
         for kid in kids:
@@ -62,7 +63,7 @@ def create_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/create_kid
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def create_kid_view(request):
     if request.method == "GET":
         kid_form = KidForm()
@@ -79,7 +80,7 @@ def create_kid_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/delete_kid
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def delete_kid_from_list_view(request):
     if request.method == "GET":
         kid_delete_form = KidDeleteForm()
@@ -98,7 +99,7 @@ def delete_kid_from_list_view(request):
             except ObjectDoesNotExist:
                 return HttpResponse("No such kid in list.", status=400)
 
-            # Get our list
+            # Get our santa's list
             santas_list = SantasList.objects.last()
 
             # If we have the kid in any of our lists we remove them
@@ -117,20 +118,19 @@ def delete_kid_from_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/kids
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def get_kids_view(request):
     if request.method == "GET":
         kids = Kid.objects.all()
 
         kid_name_list = [f"{kid.first_name} {kid.last_name}" for kid in kids]
 
-        # Pass our list to list template
         return render(request, "kidlist.html", context={'kids': kid_name_list})
 
     return HttpResponse("Bad Request.", status=400)
 
 # /santa_list/kids/(kid_id)
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def get_kid_by_id_view(request, kid_id):
     if request.method == "GET":
         # Make sure kid with that id exists
@@ -139,7 +139,6 @@ def get_kid_by_id_view(request, kid_id):
         except ObjectDoesNotExist:
             return HttpResponse("No kid with that id in the list.", status=400)
 
-        # Pass our list to list template
         return HttpResponse(f"{kid.first_name} {kid.last_name}", status=200)
 
     return HttpResponse("Bad Request.", status=400)

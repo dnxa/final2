@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required
 
 from .models import Toy, Coal
 from .forms import ToyForm
 from santalist.models import Kid, SantasList
 
 # /toy_factory/
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def toy_list_view(request):
     if request.method == "GET":
         toys = Toy.objects.all()
@@ -21,10 +21,10 @@ def toy_list_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /toy_factory/(toy_id)
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def get_toy_by_id_view(request, toy_id):
     if request.method == "GET":
-        # Make sure we toy with that id
+        # Make sure we have the toy with that id
         try:
             toy = Toy.objects.get(id=toy_id)
         except ObjectDoesNotExist:
@@ -35,7 +35,7 @@ def get_toy_by_id_view(request, toy_id):
     return HttpResponse("Bad Request.", status=400)
 
 # /toy_factory/create
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def toy_create_view(request):
     if request.method == "GET":
         toy_form = ToyForm()
@@ -54,7 +54,7 @@ def toy_create_view(request):
     return HttpResponse("Bad Request.", status=400)
 
 # /toy_factory/give_toys
-@permission_required("is_santa", login_url='/login/')
+@login_required(login_url='/login/')
 def give_toy_view(request):
     if request.method == "GET":
         # Render the give toys button
@@ -68,7 +68,7 @@ def give_toy_view(request):
         for nice_kid in nice_kids:
             gift_needed = nice_kid.gift
 
-            # Get the firs toy that is not already owned and is the correct type
+            # Get the first toy that is not already owned and is the correct type
             toy = Toy.objects.filter(toy_type=gift_needed, owner__isnull=True).first()
 
             # If we got the toy make the toy owner the current kid
@@ -81,6 +81,7 @@ def give_toy_view(request):
             coal = Coal.objects.create(owner=naughty_kid)
             coal.save()
 
+        # Show the list that will display the toys we gave
         return redirect("/santa_list/")
 
     return HttpResponse("Bad Request.", status=400)
