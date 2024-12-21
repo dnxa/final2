@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p>Enter kid id to remove</p>
+<form method="post">
+  {% csrf_token %}
+    {{ form }}
+  <button type="submit">delete</button>
+</form>
+
+</body>
+</html>

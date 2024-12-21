@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p>Time to make toy</p>
+<ul>
+{% for i, j in toys %}
+    <li>{{ i }} - Minutes: {{ j }}</li>
+{% endfor %}
+</ul>
+<p>Total minutes: {{ total_time }}</p>
+
+</body>
+</html>
